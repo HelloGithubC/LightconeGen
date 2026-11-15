@@ -6,6 +6,7 @@
 
 - 本地独立仓库根目录：`/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4`，下文记为 `<ROOT>`。
 - GitHub 远程：`https://github.com/HelloGithubC/LightconeGen.git`，默认分支 `main`。
+- 实际 origin 使用服务器已配置的 SSH 认证：`git@github.com:HelloGithubC/LightconeGen.git`；日常 `git push` 沿用此设置，无需修改全局身份或保存 HTTPS token。
 - 沿用既有 Git 身份 `HelloGithubC <xiaoliangms@outlook.com>`，不修改全局配置。
 - 父目录仍为原 LightGen checkout，其 origin 和历史保留；父目录 `.git/info/exclude` 加入 `/ForHR4/`，仅在本地忽略子仓库。
 - LightconeGen 在 `<ROOT>/.git/` 建立独立历史，首次提交只包含 ForHR4 代码、文档和本次仓库说明，不包含父仓库历史。
