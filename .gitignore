@@ -1,0 +1,7 @@
+/tests/runs/
+/mask/*.fits
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.vscode/
+.DS_Store
