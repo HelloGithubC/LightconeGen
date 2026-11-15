@@ -129,7 +129,7 @@ placement 的具体数量、位置、旋转、mock 汇总权重及优化算法�
 
 ## 9. 已建立的直接网格朝向实验
 
-入口为 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src/orientation_pipeline.py`，
+原直接计算入口现位于 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tools/legacy/orientation_pipeline.py`，
 几何实现在同目录的 `orientation_geometry.py`。它接受盒长、原始 HEALPix mask、网格数、
 observer 序列和观测红移/距离范围，比较轴向扫描、随机三维旋转及 mask 重叠筛选的候选库，
 并可在候选朝向附近执行小角度调整。位置由用户指定，本轮不采用 FFT 或位置搜索。
@@ -137,5 +137,7 @@ observer 序列和观测红移/距离范围，比较轴向扫描、随机三维�
 已使用原始 BGS mask，在低红移区间、32/64 两种网格和三个 observer 上跑通初步案例。
 代码用途、处理顺序、参数、依赖、运行命令、指标定义及输入/中间/最终输出完整清单见
 [朝向实验说明](experiments/direct_grid.md)。
+
+可导入项目的新接口位于 `src/lightconegen/`，布局搜索、两种结果模式与重建/数据点筛选见[模块说明](MODULE.md)。
 实际结果保存在 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/runs/bgs_orientation_smoke_20261112/`，
 该目录的 `manifest.json` 列出本次实际生成的文件。

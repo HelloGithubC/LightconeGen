@@ -4,6 +4,8 @@
 
 ## 文档索引
 
+* [MODULE.md](MODULE.md)：可导入 Python 包的接口、两种结果模式、重建/数据点筛选和实际核对清单。
+
 * [REPOSITORY.md](REPOSITORY.md)：独立仓库 LightconeGen 的位置、Git 管理方式、文件清单及维护命令。
 
 * [HR4_BGS_Lightcone_Strategy.md](HR4_BGS_Lightcone_Strategy.md):
@@ -22,3 +24,5 @@
 * [FFT 续跑](experiments/fft_resume.md)：续跑流程、零重叠选优依据和 N=15 实际运行。
 
 实验报告统一放在 `doc/experiments/`；实际产物继续位于被 Git 忽略的 `tests/runs/`，管理约定见 [tests 索引](../tests/README.md)。
+
+旧五个脚本已原样移到 `tools/legacy/`，当前运行入口见[工具说明](../tools/README.md)。历史报告中的旧源码路径属于当时记录。

@@ -22,7 +22,7 @@
 
 ## 一、本次更新摘要（2026-11-13）
 
-为解决原一体化脚本 [orientation_pipeline.py](orientation_pipeline.py) 多层嵌套（`shell × nmesh × strategy × observer`）导致单次验证冗杂的问题，在保留原有文件不变的前提下，新增了两个轻量化分块脚本：
+为解决原一体化脚本 [orientation_pipeline.py](../tools/legacy/orientation_pipeline.py) 多层嵌套（`shell × nmesh × strategy × observer`）导致单次验证冗杂的问题，在保留原有文件不变的前提下，新增了两个轻量化分块脚本：
 
 ### 当前 `src/` 文件结构
 
@@ -253,3 +253,28 @@ H_R(O)=\frac{G_R(O)}{\sum_x W_R(x)}.
 
 > **模型 / Model**: GPT  
 > **日期 / Date**: 2026-11-15  
+
+---
+
+> **模型 / Model**: GPT  
+> **日期 / Date**: 2026-11-15  
+
+# GPT 实现进展：可导入模块与两种保存模式
+
+- [x] 新包位于 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src/lightconegen/`，公开搜索、结果读写、续跑、覆盖重建及数据点行索引筛选接口。搜索过程不自动写文件或绘图，保存和绘图由调用者显式执行。
+- [x] 五个旧 Python 文件已从 `src/` 原样移至 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tools/legacy/`，独立命令行入口、默认值和格式保留。新包不调用这些旧脚本。
+- [x] `layout` 模式只保存 `layout.json`；内容为盒长、红移范围或距离范围、HR4 宇宙学、mask 文件名、网格数及各窗口的 observer、三个外禀 xyz 欧拉角（度）、整数网格 shift。首个 observer 为模板锚点；不保存旋转矩阵、RA/DEC、哈希或格式/来源版本。
+- [x] `full` 模式另保存覆盖、候选库、选择与搜索记录、observer 距离及参数指标，可从完成结果继续搜索。两种模式使用同一优化过程，精简模式减少保留和传输内容，搜索时仍需 FFT 内存。
+- [x] `rebuild_coverage` 用精简布局、原 mask、锚点模板及整数平移重建网格覆盖；`select_points` 接收调用者提供的 xyz 位置数组，返回指定窗口内的行索引。均采用 HR4、Mpc/h 和周期边界；不假定星系文件格式或速度列。
+- [x] 按用户确认，将 `mask/` 四个失效链接的目标从 `DESImocks/source/` 改为 `DESImocks_old/source/`，四份 FITS 表头均可读，数据内容未修改。
+- [x] 已完成数组 FFT/距离/平局核对、旧 N=5 完整存档读写、旧 N=15 精简布局导出、四个旧 CLI 无参数帮助及旧比较器兼容核对。另以派生 NSIDE32 mask 验证四种策略、两种模式、重建、点筛选、续跑、停止规则及自定义标签继承。
+- [x] 原生 NSIDE8192 BGS mask 的 `3150 Mpc/h、z3、32^3、axes、N=5、d_min=500 Mpc/h` 核对已完成：两种模式布局一致，重建与覆盖一致，32768 个网格中心的点筛选一致，续跑至 N=7 与重新搜索 N=7 一致，旧 FFT 工具与新包的覆盖完全相同、全部非计时选择字段相等。
+- [x] 206 个原文件校验值保持不变（五个旧脚本、201 个原运行文件）。本轮实际生成 60 个核对文件，均位于 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/runs/module_refactor_20261115/`，继续被 Git 忽略；没有新增测试脚本或测试套件。
+- [x] 首页、`src/Readme.md`、`tools/README.md` 和 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/doc/MODULE.md` 已更新。完整处理流程、参数、依赖、安装/调用方式和输入/中间/最终输出、日志、缓存清单见模块说明。
+
+本轮尚未执行包安装或构建，没有重跑 512^3 搜索，也未处理真实 snapshot、速度/RSD、completeness 或聚类统计；现有大网格结果仅用于存档读写/布局导出。首次失效链接报告和原生核对误比较 `elapsed_sec` 的报告均保留；排除计时字段后的对照结果另存为 `with_native_mask/legacy_comparison.json`。本轮改动未提交、未推送。
+
+---
+
+> **模型 / Model**: GPT  
+> **日期 / Date**: 2026-11-15

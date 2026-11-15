@@ -4,6 +4,8 @@
 
 > 归档说明（2026-11-15）：本文由 `tests/FFT_RESUME_README.md` 移至 `doc/experiments/fft_resume.md`。历史命令和文件清单保留；旧文档路径的当前位置见[迁移清单](../REPOSITORY.md#文档与运行产物分离)。运行产物 `tests/runs/` 未移动。
 
+> 模块重构说明：原五个 Python 文件已原样移到 `tools/legacy/`。本文中的旧源码路径为历史记录，当前可执行入口见[工具说明](../../tools/README.md)。
+
 ## 零重叠时如何选择朝向
 
 脚本按以下顺序比较位置和朝向组合：平均已有覆盖最小；并列时最近 observer 的周期距离最大；

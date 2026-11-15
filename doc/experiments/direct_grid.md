@@ -2,6 +2,8 @@
 
 > 归档说明（2026-11-15）：本文由 `tests/README.md` 移至 `doc/experiments/direct_grid.md`。历史命令和文件清单保留；旧文档路径的当前位置见[迁移清单](../REPOSITORY.md#文档与运行产物分离)。运行产物 `tests/runs/` 未移动。
 
+> 模块重构说明：原五个 Python 文件已原样移到 `tools/legacy/`。本文中的旧源码路径为历史记录，当前可执行入口见[工具说明](../../tools/README.md)。
+
 ## 目的与当前范围
 
 入口为 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src/orientation_pipeline.py`，

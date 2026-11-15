@@ -84,3 +84,44 @@ git push
 | `<ROOT>/doc/REPOSITORY.md` | 同路径 | 已补充本次迁移流程与清单 |
 
 本次使用 Git 记录文档移动并建立本地提交，不执行几何程序或提交新的测试套件。既有五个 Python 文件、201 个运行产物和四个 mask 符号链接保持原样；`.gitignore` 的 `/tests/runs/` 规则不变。核对校验值只存于执行过程内存，标准输出/错误仅在终端显示，无新实验文件、应用临时文件、缓存、日志或检查点。Git 自身的索引、对象和提交日志更新于 `<ROOT>/.git/`。不清理或删除实验产物；本次未执行推送。
+
+## Python 模块重构
+
+2026-11-15 将光锥几何搜索拆成可导入的 `lightconegen` 包。工作顺序为：保存原文件校验值 → 原样移动五个旧 Python 文件 → 提取数据类型、几何、FFT 搜索、重建/点筛选与读写接口 → 分离搜索和落盘 → 核对旧存档及小网格新旧结果 → 更新说明。新包不会调用旧脚本，原 CLI 仍可独立运行。下面路径以当前布局为准；上文 `src/*.py` 是初始化时的位置。
+
+`layout` 保存模式只生成一个精简 `layout.json`；`full` 保存覆盖、候选库和搜索记录供分析及续跑。流程、完整 API 参数、依赖、运行/安装方式以及实际输入和全部中间/最终输出见 [MODULE.md](MODULE.md)。本次通过 `PYTHONPATH=<ROOT>/src` 和现有 Python 环境核对，没有执行安装、构建、提交、推送或 Slurm 作业。
+
+| 绝对路径或确定规则 | 来源、用途、格式与实际状态 |
+|---|---|
+| `<ROOT>/src/orientation_geometry.py` → `<ROOT>/tools/legacy/orientation_geometry.py` | 既有几何库，已原样移动；Python |
+| `<ROOT>/src/orientation_pipeline.py` → `<ROOT>/tools/legacy/orientation_pipeline.py` | 既有冻结 pipeline，已原样移动；Python |
+| `<ROOT>/src/eval_strategy.py` → `<ROOT>/tools/legacy/eval_strategy.py` | 既有直接搜索入口，已原样移动；Python |
+| `<ROOT>/src/eval_fft.py` → `<ROOT>/tools/legacy/eval_fft.py` | 既有 FFT/续跑入口，已原样移动；Python |
+| `<ROOT>/src/compare_results.py` → `<ROOT>/tools/legacy/compare_results.py` | 既有汇总入口，已原样移动；Python |
+| `<ROOT>/src/lightconegen/__init__.py` | 新增，公开导入接口；Python |
+| `<ROOT>/src/lightconegen/models.py` | 新增，布局和结果数据类型；Python |
+| `<ROOT>/src/lightconegen/geometry.py` | 从原几何库提取，原生 mask 查询、旋转、周期网格及距离；Python |
+| `<ROOT>/src/lightconegen/search.py` | 从原 FFT 流程提取，联合搜索与续跑；Python |
+| `<ROOT>/src/lightconegen/reconstruct.py` | 新增，按布局重建覆盖及筛选位置行索引；Python |
+| `<ROOT>/src/lightconegen/io.py` | 新增，显式读写和可选绘图；Python |
+| `<ROOT>/pyproject.toml` | 新增，构建元数据和依赖；TOML；尚未执行安装或构建 |
+| `<ROOT>/.gitignore` | 已补构建/包元数据忽略规则；仍排除运行产物和 FITS |
+| `<ROOT>/README.md` | 已重写为包首页；Markdown |
+| `<ROOT>/src/Readme.md` | 已重写为简短 API 使用导航；Markdown |
+| `<ROOT>/src/ToDo.md` | 已补独立 GPT 头尾的重构状态块；Markdown；原讨论保留 |
+| `<ROOT>/doc/MODULE.md` | 新增，完整模块流程、参数和逐项文件清单；Markdown |
+| `<ROOT>/tools/README.md` | 新增，五个保留工具的运行和输出说明；Markdown |
+| `<ROOT>/doc/README.md` | 已加新模块和工具导航；Markdown |
+| `<ROOT>/doc/HR4_BGS_Lightcone_Strategy.md` | 已更新当前实现入口；Markdown；科学配置不变 |
+| `<ROOT>/doc/experiments/direct_grid.md` | 已加旧工具迁移说明；Markdown；历史实验记录保留 |
+| `<ROOT>/doc/experiments/fft_placement.md` | 已加旧工具迁移说明；Markdown；历史实验记录保留 |
+| `<ROOT>/doc/experiments/fft_resume.md` | 已加旧工具迁移说明；Markdown；历史实验记录保留 |
+| `<ROOT>/tests/README.md` | 已补本轮模块核对目录导航；Markdown |
+| `<ROOT>/mask/README.md` | 已更新四个软链接的当前绝对目标和修复说明；Markdown |
+| `<ROOT>/doc/REPOSITORY.md` | 已追加本节；Markdown |
+| `<ROOT>/mask/*.fits` | 四个既有软链接已按用户授权重建，目标从 `/mnt/xiaodong/xiaoliang/DESImocks/source/<同名文件>` 改为 `/mnt/xiaodong/xiaoliang/DESImocks_old/source/<同名文件>`；逐项路径见 mask/README.md；已读取 FITS 头，没有修改数据内容 |
+| `<ROOT>/tests/runs/module_refactor_20261115/**` | 本轮定向核对实际生成；含派生 mask、JSON/NPZ/CSV/PNG、旧工具日志和字体缓存；逐项绝对路径、来源、用途及状态见 MODULE.md；被 Git 忽略 |
+| `<ROOT>/tests/runs/` 中其余既有 201 个文件 | 本轮只读输入，原位保留；包括旧 N=5 和 N=15 结果、日志、缓存；不修改或清理 |
+| `<ROOT>/.git/index` | `git mv` 记录五个脚本移动而更新；本轮没有新建提交或推送 |
+
+FFT 频谱、模板体素索引、最近距离图、重建数组及选点行索引均只在内存中存在；没有新增磁盘 FFT 缓存、检查点或临时脚本。核对使用 `python -B`，不写 Python 字节码。标准输出/错误在终端显示；旧 CLI 的运行日志位于核对输出的 `legacy_axes/pipeline.log`，原生 mask 对照所捕获的 stdout/stderr 还保留在该次 `verification.json` 内；字体缓存位于对应 `cache/matplotlib/fontlist-v390.json`。首次失效链接记录及首次误比较计时字段的记录均保留，没有覆盖、删除或清理核对产物。新 API 拒绝已有输出目录或图片路径；完整保存异常可能留下部分文件。
