@@ -2,6 +2,8 @@
 
 更新日期：2026-11-15。
 
+> 归档说明（2026-11-15）：本文由 `tests/FFT_README.md` 移至 `doc/experiments/fft_placement.md`。历史命令和文件清单保留；旧文档路径的当前位置见[迁移清单](../REPOSITORY.md#文档与运行产物分离)。运行产物 `tests/runs/` 未移动。
+
 ## 目的与入口
 
 入口为 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src/eval_fft.py`。
@@ -180,4 +182,4 @@ comparison.csv 已存在，重新查看时应去掉 `--output-csv`；若要再�
 
 已新增 `--resume-from` 入口，可从本次 N=5 继续增加窗口，保留已有窗口与原候选库，结果写入新目录。
 续跑流程、参数、来源文件与新输出清单见
-[FFT_RESUME_README.md](FFT_RESUME_README.md)。
+[FFT_RESUME_README.md](fft_resume.md)。

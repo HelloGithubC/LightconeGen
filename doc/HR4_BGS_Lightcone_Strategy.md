@@ -136,6 +136,6 @@ observer 序列和观测红移/距离范围，比较轴向扫描、随机三维�
 
 已使用原始 BGS mask，在低红移区间、32/64 两种网格和三个 observer 上跑通初步案例。
 代码用途、处理顺序、参数、依赖、运行命令、指标定义及输入/中间/最终输出完整清单见
-[朝向实验说明](../tests/README.md)。
+[朝向实验说明](experiments/direct_grid.md)。
 实际结果保存在 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/runs/bgs_orientation_smoke_20261112/`，
 该目录的 `manifest.json` 列出本次实际生成的文件。

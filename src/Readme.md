@@ -90,7 +90,7 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 \
 | `--output-dir`、`--save-coverage`、`--save-candidates` | 新输出目录；后两者只属于 eval_strategy，分别保存完整覆盖和逐 observer 候选详情 |
 | `GROUP_DIRECTORY`、`--sort-by`、`--show-observers`、`--output-csv` | 汇总时按目录划定比较组，递归纳入所有 result.json，默认按名称排序；可展示选择和导出新 CSV。参数一致性需查看记录，不自动强制 |
 
-旧 pipeline/直接入口的完整命令、微调和绘图参数见[原工具说明](../tests/README.md)；FFT 全参数及实际命令见 [FFT 说明](../tests/FFT_README.md)与[续跑说明](../tests/FFT_RESUME_README.md)。各入口 `--help` 给出对应参数，续跑帮助用 `--resume-from SOURCE --help`。
+旧 pipeline/直接入口的完整命令、微调和绘图参数见[原工具说明](../doc/experiments/direct_grid.md)；FFT 全参数及实际命令见 [FFT 说明](../doc/experiments/fft_placement.md)与[续跑说明](../doc/experiments/fft_resume.md)。各入口 `--help` 给出对应参数，续跑帮助用 `--resume-from SOURCE --help`。
 
 ## 输入、中间量与输出清单
 
@@ -170,7 +170,7 @@ FFT 的模板索引、complex128 模板频谱、覆盖频谱、得分图及最�
 
 两目录各有 **14 个实际文件**：11 个自动/库缓存文件加 comparison.csv、pairwise_overlaps.csv、verification.json。N=5 对全部窗口按实际 observer 坐标重新查询原生 mask；N=15 对原覆盖加新增模板做独立 numpy.roll 重建，核对 105 对交集、距离和矩阵。前五个选择、原搜索历史及候选库保留，原 N=5 全部 14 文件 SHA256 不变。小网格全平移 FFT/直接计数也已核对；未新增测试套件。
 
-完整的逐项实际文件清单、命令和验证依据分别见[旧入口/比较组说明](../tests/README.md)、[N=5 说明](../tests/FFT_README.md)与 [N=15 续跑说明](../tests/FFT_RESUME_README.md)。科学约定见[光锥策略交接](../doc/HR4_BGS_Lightcone_Strategy.md)。
+完整的逐项实际文件清单、命令和验证依据分别见[旧入口/比较组说明](../doc/experiments/direct_grid.md)、[N=5 说明](../doc/experiments/fft_placement.md)与 [N=15 续跑说明](../doc/experiments/fft_resume.md)。科学约定见[光锥策略交接](../doc/HR4_BGS_Lightcone_Strategy.md)。
 
 ## 当前边界与未完成事项
 

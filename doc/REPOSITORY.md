@@ -58,8 +58,29 @@ git push
 | `/mnt/xiaodong/xiaoliang/software/LightGen/.git/info/exclude` | 既有父仓库元数据；仅追加 `/ForHR4/`，不提交到任何仓库 |
 | `<ROOT>/.git/**` | 本次生成的 Git 元数据；不作为代码文件上传。包括 HEAD、config、description、index、COMMIT_EDITMSG、hooks/*.sample、info/exclude、refs/heads/main、refs/remotes/origin/main、logs/HEAD、logs/refs/** 及 objects/{两位前缀}/{38位十六进制对象名}；推送更新远程跟踪引用/日志 |
 | `<ROOT>/mask/*.fits` | 四个既有符号链接；具体绝对目标和用途见 mask/README.md；原样保留并排除提交 |
-| `<ROOT>/tests/runs/**` | 全部既有实验产物，含 NPZ、CSV、JSON、PNG、pipeline.log 和字体缓存；原样保留并排除提交。逐项实际清单见 tests 下三份实验说明和各运行 manifest |
+| `<ROOT>/tests/runs/**` | 全部既有实验产物，含 NPZ、CSV、JSON、PNG、pipeline.log 和字体缓存；原样保留并排除提交。逐项实际清单现见 doc/experiments 下三份实验说明和各运行 manifest |
 
 本次不执行几何实验，不生成新的实验结果、Python 字节码、字体缓存、应用临时文件或检查点。完整性核对的基线校验值只保留在执行过程内存中。Git 命令的 stdout/stderr 在终端显示，不另建日志文件；Git 自身的提交/引用日志位于上表 `.git/logs/**`。不清理、不删除本地数据，已有科学记录中的绝对路径保持有效。
 
 推送只上传提交中的代码/文档及所需 Git 对象。clone 不会恢复被忽略的 mask 或实验产物；需另行提供它们，才能运行几何流程或续跑已有结果。上游项目的 MIT 文字用于保留来源记录，不替新工具擅自添加作者或另选许可证。
+
+## 文档与运行产物分离
+
+2026-11-15 将三份实验说明整体移入 `doc/experiments/`，更新导航，并在 `tests/README.md` 留下短索引。上节首次导入清单中的旧文档路径是历史记录；当前位置以本节为准。运行命令、实验数据路径和已有结果文件保持原样。
+
+以下 `<ROOT>` 仍为 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4`，路径规则可展开为确定绝对路径。所有文件均为 Markdown；本次实际变更清单如下：
+
+| 输入旧路径 | 最终路径 | 来源、用途与实际状态 |
+|---|---|---|
+| `<ROOT>/tests/README.md` 原内容 | `<ROOT>/doc/experiments/direct_grid.md` | 已移动；保留直接计算流程、比较组和文件清单，更新跨文档链接并加归档说明 |
+| `<ROOT>/tests/FFT_README.md` | `<ROOT>/doc/experiments/fft_placement.md` | 已移动；保留 FFT 方法与 N=5 记录，更新跨文档链接并加归档说明；旧位置不保留副本 |
+| `<ROOT>/tests/FFT_RESUME_README.md` | `<ROOT>/doc/experiments/fft_resume.md` | 已移动；保留续跑与 N=15 记录并加归档说明；旧位置不保留副本 |
+| 原说明已移出 | `<ROOT>/tests/README.md` | 已重新写为简短索引，说明本地产物与输出目录约定 |
+| `<ROOT>/README.md` | 同路径 | 已修改首页链接和文档表 |
+| `<ROOT>/src/Readme.md` | 同路径 | 已修改实验说明导航链接 |
+| `<ROOT>/src/ToDo.md` | 同路径 | 已更新文档引用路径，保留各模型开头/结尾标记及讨论内容 |
+| `<ROOT>/doc/README.md` | 同路径 | 已修改文档索引，补齐 FFT 与续跑入口 |
+| `<ROOT>/doc/HR4_BGS_Lightcone_Strategy.md` | 同路径 | 已更新直接网格实验说明链接 |
+| `<ROOT>/doc/REPOSITORY.md` | 同路径 | 已补充本次迁移流程与清单 |
+
+本次使用 Git 记录文档移动并建立本地提交，不执行几何程序或提交新的测试套件。既有五个 Python 文件、201 个运行产物和四个 mask 符号链接保持原样；`.gitignore` 的 `/tests/runs/` 规则不变。核对校验值只存于执行过程内存，标准输出/错误仅在终端显示，无新实验文件、应用临时文件、缓存、日志或检查点。Git 自身的索引、对象和提交日志更新于 `<ROOT>/.git/`。不清理或删除实验产物；本次未执行推送。

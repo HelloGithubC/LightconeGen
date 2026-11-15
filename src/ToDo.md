@@ -16,7 +16,7 @@
 - 比较组目录：
   `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/runs/comparison_group_20261113`。
   运行方法、实际输入及输出清单见
-  `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/README.md` 的“单策略实验与比较组”。
+  `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/doc/experiments/direct_grid.md` 的“单策略实验与比较组”。
 
 ---
 
@@ -214,7 +214,7 @@ H_R(O)=\frac{G_R(O)}{\sum_x W_R(x)}.
 - 结果目录：`/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/runs/fft_axes_z3_n512_N5_20261115`。选中朝向依次为 base、base、y_60、y_60、y_60；前四个窗口无体素交集，最后一个与 observer 1 的窗口有 4 个交集体素。非重复覆盖占盒子 14.8212634%，最小 observer 周期间距 770.3461615 Mpc/h。
 - 正式运行耗时 380.925 秒、峰值 RSS 20.6669 GiB；最大 FFT 整数还原残差 1.8626451492e-9。已逐窗口按实际 observer 坐标重新查询原始 mask、重建覆盖并计数全部 10 对交集，核对通过；保存 verification.json 和 pairwise_overlaps.csv，未新建核对脚本或测试套件。
 - compare_results.py 已实际读取本次结果并生成 comparison.csv；仅将终端的平均已有覆盖显示改为有效数字，避免微小非零值被显示成零。正式结果目录含日志、字体缓存、三个后处理文件共 14 个文件；manifest.json 已更新完整清单。
-- 实现流程、全部参数、依赖与输入/输出/内存中间量清单见 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/FFT_README.md`。
+- 实现流程、全部参数、依赖与输入/输出/内存中间量清单见 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/doc/experiments/fft_placement.md`。
 
 ---
 
@@ -234,7 +234,7 @@ H_R(O)=\frac{G_R(O)}{\sum_x W_R(x)}.
 - 来源目录：`/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/runs/fft_axes_z3_n512_N5_20261115`。续跑前后已核对其全部 14 个文件 SHA256 不变；前五个完整选择记录、原 52 条候选历史及候选库数组均原样保留。
 - 新输出目录：`/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/runs/fft_axes_z3_n512_N15_fromN5_20261115`。已正常达到 N=15；覆盖盒子 42.1322189%，最小 observer 周期间距 500.0459078 Mpc/h，最大覆盖次数 3。最后一个窗口平均已有覆盖 0.2050226896，全部窗口该指标平均为 0.0528371692。
 - 本次续跑耗时 625.949 秒、峰值 RSS 20.7994 GiB；与来源运行累计 1006.874 秒。原覆盖加 10 个新增原生 mask 模板（独立 numpy.roll 平移）的重建结果与保存覆盖完全一致；105 对交集与周期距离、旋转矩阵和最低分单调性核对通过。新目录含日志、缓存及三个后处理产物共 14 个文件，manifest 已更新；未新建测试套件。
-- 续跑工作流程、参数、实际命令及完整文件清单见 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/FFT_RESUME_README.md`。
+- 续跑工作流程、参数、实际命令及完整文件清单见 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/doc/experiments/fft_resume.md`。
 
 ## 当前完成情况汇总与使用入口
 

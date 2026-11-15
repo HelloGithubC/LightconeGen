@@ -14,5 +14,11 @@
   - DD、DR、RR 的跨 mock 加权汇总与 `LSS_python.xismu` 分析配置
   - 尚待明确的实现细节和 HR4 数据不可用时的验证安排
 
-* [朝向几何实验](../tests/README.md):
+* [朝向几何实验](experiments/direct_grid.md):
   直接网格 pipeline 的运行方式、旋转策略、指标、依赖及实际案例文件清单。
+
+* [FFT 联合放置](experiments/fft_placement.md)：联合搜索方法、参数、输入/输出清单和 N=5 实际运行。
+
+* [FFT 续跑](experiments/fft_resume.md)：续跑流程、零重叠选优依据和 N=15 实际运行。
+
+实验报告统一放在 `doc/experiments/`；实际产物继续位于被 Git 忽略的 `tests/runs/`，管理约定见 [tests 索引](../tests/README.md)。

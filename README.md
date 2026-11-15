@@ -9,7 +9,7 @@
 - 完成结果续跑：保留已有位置、朝向和搜索历史，只增加新窗口，写入新目录。
 - 结果汇总：按比较组目录查看配置、指标及逐窗口选择，可导出 CSV。
 
-几何基线已完成：盒长 3150 Mpc/h、BGS z3=[0.30,0.40)、512³ 网格、axes 13 朝向、最小 observer 间距 500 Mpc/h，从 N=5 续跑至 N=15；最终非重复覆盖盒子 42.1322189%。详见 [N=5 记录](tests/FFT_README.md)和 [N=15 续跑记录](tests/FFT_RESUME_README.md)。
+几何基线已完成：盒长 3150 Mpc/h、BGS z3=[0.30,0.40)、512³ 网格、axes 13 朝向、最小 observer 间距 500 Mpc/h，从 N=5 续跑至 N=15；最终非重复覆盖盒子 42.1322189%。详见 [N=5 记录](doc/experiments/fft_placement.md)和 [N=15 续跑记录](doc/experiments/fft_resume.md)。
 
 ## 使用
 
@@ -52,9 +52,10 @@ python -B src/eval_fft.py \
 | [src/Readme.md](src/Readme.md) | 所有入口、流程、参数、依赖及输入/中间/输出清单 |
 | [src/ToDo.md](src/ToDo.md) | 各模型的讨论、待办与完成情况 |
 | [doc/HR4_BGS_Lightcone_Strategy.md](doc/HR4_BGS_Lightcone_Strategy.md) | 科学约定与后续系统误差任务 |
-| [tests/README.md](tests/README.md) | 原直接计算 pipeline 和比较组记录 |
-| [tests/FFT_README.md](tests/FFT_README.md) | FFT 工作流程、参数及 N=5 实际运行 |
-| [tests/FFT_RESUME_README.md](tests/FFT_RESUME_README.md) | 续跑实现及 N=15 实际运行 |
+| [doc/experiments/direct_grid.md](doc/experiments/direct_grid.md) | 原直接计算 pipeline 和比较组记录 |
+| [doc/experiments/fft_placement.md](doc/experiments/fft_placement.md) | FFT 工作流程、参数及 N=5 实际运行 |
+| [doc/experiments/fft_resume.md](doc/experiments/fft_resume.md) | 续跑实现及 N=15 实际运行 |
+| [tests/README.md](tests/README.md) | 本地运行产物约定与实验文档索引 |
 | [mask/README.md](mask/README.md) | 本地数据要求和符号链接说明 |
 | [doc/REPOSITORY.md](doc/REPOSITORY.md) | 仓库独立化方式、维护命令及文件清单 |
 
