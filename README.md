@@ -2,6 +2,8 @@
 
 LightconeGen 是用于周期模拟盒中光锥窗口几何搜索和应用的 Python 包。它根据角向 survey mask 与径向范围选择 observer 位置和朝向。包 API 位于 `src/lightconegen/`，详细流程、参数、依赖、运行方式和文件清单见[模块指南](doc/MODULE.md)。
 
+已知光锥布局后，可以用 `create_random_mock` 按指定共动数密度生成供 `DR`、`RR` 使用的随机点。调用示例见[随机目录生成](doc/MODULE.md#生成随机目录)。
+
 原有五个独立脚本按字节保存在 `tools/legacy/`：`orientation_geometry.py`、`orientation_pipeline.py`、`eval_strategy.py`、`eval_fft.py` 和 `compare_results.py`。它们保留原命令行入口、默认值和输出格式；历史实验记录仍描述这些旧脚本的实际运行，不代表新包运行。
 
 从本目录安装到当前 Python 环境（此命令尚未执行）：

@@ -1,6 +1,6 @@
 # LightconeGen Python 包
 
-本文说明 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src/lightconegen/` 中的可导入包。包用于在周期模拟盒中搜索和应用光锥窗口几何：输入角向 survey mask 和一个径向区间，返回 observer 位置、朝向与网格平移。它不生成 mock 星系目录，不做聚类统计。
+本文说明 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src/lightconegen/` 中的可导入包。包用于在周期模拟盒中搜索和应用光锥窗口几何：输入角向 survey mask 和一个径向区间，返回 observer 位置、朝向与网格平移。包可以按光锥布局生成用于配对统计的无聚集随机点。
 
 原五个 Python 脚本保持字节级原样，位于 `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tools/legacy/`：`orientation_geometry.py`、`orientation_pipeline.py`、`eval_strategy.py`、`eval_fft.py`、`compare_results.py`。它们仍是独立 CLI，沿用旧参数、默认值和输出格式。历史实验文档记录的是这些脚本产生的结果，不是新包的运行结果。
 
@@ -20,7 +20,7 @@ cd /mnt/xiaodong/xiaoliang/software/LightGen/ForHR4
 ```python
 from lightconegen import (
     Lightcone, LightconeLayout, SearchResult, SkyMask,
-    load_layout, load_result, plot_coverage, rebuild_coverage,
+    create_random_mock, load_layout, load_result, plot_coverage, rebuild_coverage,
     resume_search, save_result, search_lightcones, select_points,
 )
 ```
@@ -93,6 +93,44 @@ search_lightcones(
 `load_layout(path)` 读取紧凑布局或旧 `result.json`，对旧格式中的旋转矩阵转换为欧拉角。`load_result(full_dir)` 读取新 full 存档，也兼容旧已完成 FFT 结果。`resume_search(full_result_or_directory, num_cones, *, mask=None, result_mode="full", workers=None, chunk_size=None, max_mean_prior=None)` 续跑完整结果；可选 mask 覆盖来源 mask，其余三个可选计算/停止参数若未指定则继承原结果。续跑保留已有选择与原候选库。包不调用旧脚本，不通过 subprocess 导入旧实现。
 
 `rebuild_coverage(layout, *, mask=None, mask_dir=".", chunk_size=262144)` 返回 `uint32` 覆盖立方体，使用锚点模板及整数移位重建。`select_points(positions, layout, cone_id=0, *, mask=None, mask_dir=".", chunk_size=262144)` 返回输入位置数组中位于指定窗口的行索引。它不解析文件格式、不假设 velocity 列、不计算 RSD、不写回或裁剪原始目录。`plot_coverage(coverage, path, *, boxsize, observers=())` 接受覆盖 ndarray，不接受 `SearchResult`；将图写入指定路径，拒绝已有文件，并创建所需父目录。绘图是显式调用，不会在搜索时自动生成。
+
+## 生成随机目录
+
+`create_random_mock(layout, number_density, cone_id=0, *, mask=None, mask_dir=".", seed=None, frame="box", chunk_size=262144)` 为一个已有光锥生成供 `DR`、`RR` 使用的随机点。使用现有 NumPy 随机数生成器、HR4 距离换算及 Astropy/healpy FITS mask 接口。
+
+1. 从 `layout` 取壳层径向范围和第 `cone_id` 个光锥，编号从 0 开始。用原生二值 mask 算有效立体角 `Ω`，从而得到共动体积 `V = Ω * (rmax³ - rmin³) / 3`。按 `round(number_density * V)` 确定点数。数密度单位为 `(h/Mpc)^3`，接受 0，结果此时为 `(0, 3)` 数组。
+2. 分批在球面均匀抽 `RA` 与 `sin(DEC)`，按原生 mask 筛选方向。对每个通过的方向独立均匀抽 `r³` 得到共动距离。`chunk_size` 是每批角向候选点数上限。传固定整数 `seed` 可复现相同参数下的结果，也可传入一个 NumPy `Generator` 连续生成不同目录。
+3. 返回 `float64` 的 `(N, 3)` 笛卡尔数组，单位 Mpc/h。默认 `frame="box"` 按光锥朝向旋转，平移至 observer 并按周期边界折回，与 `select_points` 的输入一致。`frame="sky"` 以 observer 为原点，沿 mask 天球轴输出，适用于同样坐标下的观测式配对。点的位置独立于 FFT 搜索网格的 `nmesh`。
+
+`mask` 接受 FITS 路径或已有的 `SkyMask`。省略时通过 `mask_dir / layout.mask` 查找；循环处理多个光锥时可以重用一个打开的 `SkyMask`，它会缓存掩膜面积。以下示例可在现有 Python 环境导入包后执行，也可通过 `PYTHONPATH=/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src` 和 `python -B` 从源码调用：
+
+```python
+from lightconegen import create_random_mock, load_layout
+
+layout = load_layout(
+    "/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/runs/"
+    "module_refactor_20261115/without_mask/compact_n15/layout.json"
+)
+random_xyz = create_random_mock(
+    layout, number_density=1e-5, cone_id=2,
+    mask_dir="/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/mask",
+    seed=41, frame="sky", chunk_size=2048,
+)
+```
+
+2026-11-18 定向核对使用上述布局和参数，通过已打开的原生 BGS `SkyMask` 分别生成两种坐标。每种得到 9,264 点，盒坐标全部通过 `select_points`，包含跨周期边界的点。两种坐标的相互转换与输出一致。径向的四个等体积区间分别得到 2,326、2,275、2,330、2,333 点。零数密度和舍入后为零的情况均返回空数组。
+
+| 输入或输出路径 | 来源、内容和实际状态 |
+|---|---|
+| `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/tests/runs/module_refactor_20261115/without_mask/compact_n15/layout.json` | 既有 N=15 布局 JSON，提供壳层、朝向与 observer。已读取。 |
+| `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/mask/BGSmask_nside8192_nested.fits` → `/mnt/xiaodong/xiaoliang/DESImocks_old/source/BGSmask_nside8192_nested.fits` | 原生 NESTED FITS，标签 4 定义有效天区。已读取。 |
+| `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src/lightconegen/randoms.py`、`/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src/lightconegen/__init__.py` | 前者新增 Python 采样实现，后者新增公开导出。已写入。 |
+| `/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/README.md`、`/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/src/Readme.md`、`/mnt/xiaodong/xiaoliang/software/LightGen/ForHR4/doc/MODULE.md` | Markdown 入口、接口说明与本次实测清单。已更新。 |
+| 内存中的 `random_xyz` 和采样中间量 | 核对实际生成两份 `float64` xyz 数组、候选方向、半径与验证索引，均随进程结束释放。函数的返回数组由调用者决定如何保存和使用。 |
+| `/tmp/lightconegen-random-we3izg8_/fontlist-v390.json` | 核对时 healpy/Matplotlib 实际生成的字体缓存。核对用临时目录，结束时整体删除。 |
+| 终端 stdout/stderr、字节码、日志、检查点 | 核对结果只打印到终端。使用 `python -B`，没有生成字节码、本地随机数据文件、独立日志、临时脚本或检查点。 |
+
+当前随机目录采用二值 mask 和恒定共动数密度。随红移变化的 `dN/dz`、completeness 权重及 RSD 处理留在实际观测选择流程中。验证使用既有布局与原生 mask，没有读取真实 snapshot 或运行配对统计。
 
 ## 文件与副作用
 

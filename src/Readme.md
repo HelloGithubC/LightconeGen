@@ -14,12 +14,14 @@ cd /mnt/xiaodong/xiaoliang/software/LightGen/ForHR4
 ```python
 from lightconegen import (
     Lightcone, LightconeLayout, SearchResult, SkyMask,
-    load_layout, load_result, plot_coverage, rebuild_coverage,
+    create_random_mock, load_layout, load_result, plot_coverage, rebuild_coverage,
     resume_search, save_result, search_lightcones, select_points,
 )
 ```
 
 `search_lightcones` 返回 `SearchResult`；`save_result` 将结果写入新目录。布局模式只保存 `layout.json`，完整模式还保存覆盖图、候选库、选择记录、搜索诊断、observer 距离、结果配置和 manifest。`load_layout` 可读取紧凑布局及旧 `result.json`；`load_result` 可读取新完整结果和旧 FFT 完成结果。`resume_search` 可从完整结果续跑。`rebuild_coverage` 返回 `uint32` 覆盖数组；`select_points` 返回调用者输入位置数组中的行索引。`plot_coverage` 接受覆盖 ndarray 和输出路径。
+
+`create_random_mock(layout, number_density, cone_id=0, ...)` 直接在现有光锥内均匀采样共动体积，返回 `(N, 3)` 的 xyz 数组。数密度单位为 `(h/Mpc)^3`。默认返回周期盒坐标，也可用 `frame="sky"` 取得以 observer 为原点的天球笛卡尔坐标。见[参数与示例](../doc/MODULE.md#生成随机目录)。
 
 旧五个脚本逐字节保存在 `tools/legacy/`，仍作为独立 CLI 使用，不是新包的运行依赖。其原入口、运行记录和文件格式见[历史实验文档](../doc/experiments/)及[旧使用说明](../doc/README.md)。
 
